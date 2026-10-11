@@ -1,0 +1,6 @@
+batch_id;production_date;potter_name;category;total_qty;broken_pieces;kiln
+LOT-F1-2026-0101;2026-10-10;Manuel Ferreira;Jarra 60x20cm Terracota;120;6;FORNO_A
+LOT-F1-2026-0102;2026-10-10;Armindo Silva;Vaso 20x20cm Terracota;250;18;FORNO_A
+LOT-F2-2026-0201;2026-10-11;Manuel Silva;Prato 30x3cm Terracota;180;4;FORNO_B
+LOT-ERR-999-0000;2026-10-11;Joao Santos;Caneca 40x18cm Pintado;80;2;FORNO_B
+LOT-F2-2026-0202;2026-10-11;Marco Pinto;Vaso 20x20cm Vidrado;95;6;FORNO_B

@@ -1,0 +1,34 @@
+[
+  {
+    "batch_id": "LOT-F1-2026-0101",
+    "kiln": "FORNO_A",
+    "max_temp_recorded": 985.5,
+    "temp_increase_rate": 115.0,
+    "total_kwh_consumed": 142.80,
+    "firing_duration_hours": 8.5
+  },
+  {
+    "batch_id": "LOT-F1-2026-0102",
+    "kiln": "FORNO_A",
+    "max_temp_recorded": 1010.0,
+    "temp_increase_rate": 135.4,
+    "total_kwh_consumed": 210.50,
+    "firing_duration_hours": 10.0
+  },
+  {
+    "batch_id": "LOT-F2-2026-0201",
+    "kiln": "FORNO_B",
+    "max_temp_recorded": 978.2,
+    "temp_increase_rate": 95.0,
+    "total_kwh_consumed": 115.30,
+    "firing_duration_hours": 7.5
+  },
+  {
+    "batch_id": "LOT-F2-2026-0202",
+    "kiln": "FORNO_B",
+    "max_temp_recorded": 1145.0,
+    "temp_increase_rate": 142.0,
+    "total_kwh_consumed": 160.00,
+    "firing_duration_hours": 9.0
+  }
+]

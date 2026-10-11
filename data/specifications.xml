@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<specifications>
+    <product>
+        <category>Jarra 60x20cm Terracota</category>
+        <max_temperature>990</max_temperature>
+        <max_tax_temp_increase>120</max_tax_temp_increase>
+        <kwh_base_price>0.18</kwh_base_price>
+    </product>
+    <product>
+        <category>Vaso 20x20cm Terracota</category>
+        <max_temperature>990</max_temperature>
+        <max_tax_temp_increase>120</max_tax_temp_increase>
+        <kwh_base_price>0.18</kwh_base_price>
+    </product>
+    <product>
+        <category>Prato 30x3cm Terracota</category>
+        <max_temperature>990</max_temperature>
+        <max_tax_temp_increase>120</max_tax_temp_increase>
+        <kwh_base_price>0.18</kwh_base_price>
+    </product>
+    <product>
+        <category>Vaso 20x20cm Vidrado</category>
+        <max_temperature>1100</max_temperature>
+        <max_tax_temp_increase>130</max_tax_temp_increase>
+        <kwh_base_price>0.18</kwh_base_price>
+    </product>
+</specifications>
