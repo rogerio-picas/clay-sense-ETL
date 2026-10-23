@@ -1,0 +1,7 @@
+2026/10/20 22:22:56 - Report Export Transformation - Using run configuration [Pentaho local]
+2026/10/20 22:22:56 - kiln_costs_daily_report - Expedindo in?cio para transforma??o [kiln_costs_daily_report]
+2026/10/20 22:22:57 - Table input.0 - Finished reading query, closing connection
+2026/10/20 22:22:57 - Filter rows.0 - Finished processing (I=0, O=0, R=57, W=19, U=0, E=0)
+2026/10/20 22:22:57 - Table input.0 - Finished processing (I=57, O=0, R=0, W=114, U=0, E=0)
+2026/10/20 22:22:58 - Anomaly Report XLSX.0 - Finished processing (I=0, O=20, R=19, W=19, U=0, E=0)
+2026/10/20 22:22:59 - Production Costs Report XLSX.0 - Finished processing (I=0, O=58, R=57, W=57, U=0, E=0)

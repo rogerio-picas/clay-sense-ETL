@@ -1,0 +1,9 @@
+2026/10/21 00:34:41 - Production Model Transformation - Using run configuration [Pentaho local]
+2026/10/21 00:34:41 - tr_load_production_model - Expedindo in?cio para transforma??o [tr_load_production_model]
+2026/10/21 00:34:41 - Get rows from result.0 - Finished processing (I=0, O=0, R=5, W=5, U=0, E=0)
+2026/10/21 00:34:43 - Insert / update - Production.0 - Finished processing (I=5, O=5, R=5, W=5, U=0, E=0)
+2026/10/21 00:34:44 - Insert / update - kiln_firing.0 - Finished processing (I=5, O=5, R=5, W=5, U=0, E=0)
+2026/10/21 00:34:44 - Block until kiln_firing insert/update.0 - Finished processing (I=0, O=0, R=5, W=5, U=0, E=0)
+2026/10/21 00:34:45 - Block until firing_batch insert/update.0 - Finished processing (I=0, O=0, R=5, W=5, U=0, E=0)
+2026/10/21 00:34:46 - Insert / update - firing_batch.0 - Finished processing (I=5, O=5, R=5, W=5, U=0, E=0)
+2026/10/21 00:34:46 - Insert / update - batch_costs.0 - Finished processing (I=5, O=5, R=5, W=5, U=0, E=0)

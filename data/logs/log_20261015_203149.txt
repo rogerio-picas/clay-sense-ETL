@@ -1,0 +1,19 @@
+2026/10/15 20:31:49 - Transformation - Using run configuration [Pentaho local]
+2026/10/15 20:31:49 - tr_claysense_main - Expedindo in?cio para transforma??o [tr_claysense_main]
+2026/10/15 20:31:49 - Load Audit Rejections.0 - Connected to database [NeonDB Cloud Database] (commit=1000)
+2026/10/15 20:31:49 - CSV file input.0 - Header row skipped in file 'C:\PERSONAL\ISI\clay-sense-ETL\data\production.csv'
+2026/10/15 20:31:49 - CSV file input.0 - Finished processing (I=6, O=0, R=0, W=5, U=0, E=0)
+2026/10/15 20:31:49 - Get data from XML.0 - Finished processing (I=4, O=0, R=0, W=4, U=0, E=0)
+2026/10/15 20:31:49 - JSON input.0 - Finished processing (I=4, O=0, R=0, W=4, U=0, E=0)
+2026/10/15 20:31:49 - Regex evaluation.0 - Finished processing (I=0, O=0, R=5, W=5, U=0, E=0)
+2026/10/15 20:31:49 - Filter rows.0 - Finished processing (I=0, O=0, R=5, W=5, U=0, E=0)
+2026/10/15 20:31:49 - Set rejection reason.0 - Finished processing (I=0, O=0, R=1, W=1, U=0, E=0)
+2026/10/15 20:31:49 - Stream lookup.0 - Finished processing (I=0, O=0, R=8, W=4, U=0, E=0)
+2026/10/15 20:31:49 - Modified JavaScript value.0 - Optimization level set to 9.
+2026/10/15 20:31:49 - Telemetry Lookup.0 - Finished processing (I=0, O=0, R=8, W=4, U=0, E=0)
+2026/10/15 20:31:49 - Modified JavaScript value.0 - Finished processing (I=0, O=0, R=4, W=4, U=0, E=0)
+2026/10/15 20:31:50 - Load Audit Rejections.0 - Finished processing (I=0, O=1, R=1, W=1, U=0, E=0)
+2026/10/15 20:31:51 - Insert / update - Production.0 - Finished processing (I=4, O=0, R=4, W=4, U=0, E=0)
+2026/10/15 20:31:51 - Insert / update - kiln_firing.0 - Finished processing (I=4, O=0, R=4, W=4, U=0, E=0)
+2026/10/15 20:31:51 - Insert / update - firing_batch.0 - Finished processing (I=4, O=0, R=4, W=4, U=0, E=0)
+2026/10/15 20:31:52 - Insert / update - batch_costs.0 - Finished processing (I=4, O=0, R=4, W=4, U=4, E=0)

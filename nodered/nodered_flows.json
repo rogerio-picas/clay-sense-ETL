@@ -1,0 +1,358 @@
+[
+    {
+        "id": "tab_claysense_gen",
+        "type": "tab",
+        "label": "ClaySense Data Generator",
+        "disabled": false,
+        "info": ""
+    },
+    {
+        "id": "inject_generate",
+        "type": "inject",
+        "z": "tab_claysense_gen",
+        "name": "Generate New Batch",
+        "props": [
+            {
+                "p": "payload"
+            }
+        ],
+        "repeat": "900",
+        "crontab": "",
+        "once": true,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 400,
+        "y": 220,
+        "wires": [
+            [
+                "func_generate_all"
+            ]
+        ]
+    },
+    {
+        "id": "func_generate_all",
+        "type": "function",
+        "z": "tab_claysense_gen",
+        "name": "Data Generator (CSV and JSON)",
+        "func": "// 1. Constantes e Catálogos Base\nconst potters = [\n    'António Silva', 'Pedro Martins', 'Carlos Alberto', 'João Rosa',\n    'André Santos', 'Rui Pedro', 'Armindo Matos', 'Gonçalo Duarte'\n];\n\nconst categories = [\n    // Peças Normais (Temperatura entre 950 ºC e 1000 ºC)\n    'Pote Triplo 30x30', 'Caneca Terracota 15x10', 'Jarra Moura 70x30',\n    'Vaso Jardineira 40x20', 'Prato de Fundo 35x4', 'Talha Larga 80x60',\n    'Taça Redonda 35x35', 'Ânfora 50x30',\n    // Peças Vidradas (Temperatura > 1000 ºC)\n    'Pote Vidrado 30x30', 'Caneca Vidrada 30x20', 'Jarra Vidrada 60x30',\n    'Vaso Vidrado 30x40', 'Prato Vidrado 28x5', 'Talha Vidrada 80x60',\n    'Vaso de Jardim Marroquino Vidrado 70x50', 'Ânfora Grega Vidrada 50x30'\n];\n\n// Estritamente Forno A e Forno B\nconst kilns = [\n    { id: 'FORNO_A', num: 1 },\n    { id: 'FORNO_B', num: 2 }\n];\n\nconst randomItem = (arr) => arr[Math.floor(Math.random() * arr.length)];\nconst randomInt = (min, max) => Math.floor(Math.random() * (max - min + 1)) + min;\nconst randomFloat = (min, max, dec) => parseFloat((Math.random() * (max - min) + min).toFixed(dec));\nconst gaussianNoise = (stdDev = 1) => (Math.random() + Math.random() + Math.random() - 1.5) * 2 * stdDev;\n\nconst now = new Date();\nconst currentYear = now.getFullYear();\nconst productionDate = now.toISOString().split('T')[0];\nconst batchCount = randomInt(2, 6);\n\nlet telemetryBatches = [];\nlet csvContent = \"batch_id,production_date,potter_name,category,total_qty,broken_pieces,approved_pieces\\n\";\n\nfor (let i = 0; i < batchCount; i++) {\n    const selectedKiln = randomItem(kilns);\n    const firingId = randomInt(100, 999);\n\n    // Formato: LOT-F1-2026-XXXX ou LOT-F2-2026-XXXX\n    const batchId = `LOT-F${selectedKiln.num}-${currentYear}-${String(randomInt(0, 9999)).padStart(4, '0')}`;\n    const category = randomItem(categories);\n    const potter = randomItem(potters);\n\n    // Identificação de regime de cozedura\n    const isGlazed = /vidrad[ao]/i.test(category);\n\n    let maxTemp;\n    let durationHours;\n    let tempAnomaly = false;\n\n    if (isGlazed) {\n        // Regime Vidrado: > 1000 ºC\n        const noise = gaussianNoise(3.5);\n        maxTemp = 1010.0 + randomFloat(5.0, 65.0, 2) + noise;\n        durationHours = randomFloat(8.5, 13.0, 2);\n\n        if (Math.random() < 0.10) {\n            maxTemp += randomFloat(15.0, 45.0, 2);\n            tempAnomaly = true;\n        }\n    } else {\n        // Regime Normal: ronda 975 ºC\n        const noise = gaussianNoise(3.0);\n        maxTemp = 975.0 + randomFloat(-22.0, 22.0, 2) + noise;\n        durationHours = randomFloat(5.5, 8.5, 2);\n\n        if (Math.random() < 0.08) {\n            maxTemp = 1001.0 + randomFloat(2.0, 30.0, 2);\n            tempAnomaly = true;\n        }\n    }\n\n    maxTemp = parseFloat(maxTemp.toFixed(2));\n\n    // Consumo de Gás (m³): base horária média\n    const m3PerHour = isGlazed ? randomFloat(22.0, 26.5, 2) : randomFloat(18.0, 22.0, 2);\n    const gasConsumedM3 = parseFloat((durationHours * m3PerHour).toFixed(2));\n\n    // Regras de Produção e Quebras\n    const totalQty = randomInt(30, 200);\n    let broken;\n\n    if (tempAnomaly) {\n        const defectPercent = randomFloat(0.20, 0.50, 2);\n        broken = Math.min(totalQty, Math.max(5, Math.floor(totalQty * defectPercent)));\n    } else {\n        if (Math.random() < 0.08) {\n            broken = randomInt(4, 15);\n        } else {\n            broken = randomInt(0, Math.max(1, Math.floor(totalQty * 0.04)));\n        }\n    }\n\n    const approved = Math.max(0, totalQty - broken);\n\n    // a) Linha CSV\n    csvContent += `${batchId},${productionDate},${potter},${category},${totalQty},${broken},${approved}\\n`;\n\n    // b) Telemetria JSON (com consumo real em m3)\n    telemetryBatches.push({\n        batch_id: batchId,\n        firing_id: firingId,\n        kiln_id: selectedKiln.id,\n        max_temp_recorded: maxTemp,\n        firing_duration_hours: durationHours,\n        gas_consumed_m3: gasConsumedM3,\n        temp_anomaly: tempAnomaly,\n        rate_anomaly: false,\n        firing_anomaly: tempAnomaly\n    });\n}\n\nconst jsonPayload = JSON.stringify(telemetryBatches, null, 2);\n\n// Saída 1: CSV de Produção | Saída 2: JSON de Telemetria | Saída 3: Telemetria via MQTT\nreturn [\n    { payload: csvContent },\n    { payload: jsonPayload },\n    { payload: jsonPayload }\n];",
+        "outputs": 3,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 720,
+        "y": 220,
+        "wires": [
+            [
+                "file_csv"
+            ],
+            [
+                "mqtt_out_telemetry",
+                "file_json"
+            ],
+            []
+        ]
+    },
+    {
+        "id": "file_csv",
+        "type": "file",
+        "z": "tab_claysense_gen",
+        "name": "Save CSV Production File",
+        "filename": "C:\\PERSONAL\\ISI\\clay-sense-ETL\\data\\production.csv",
+        "filenameType": "str",
+        "appendNewline": false,
+        "createDir": true,
+        "overwriteFile": "true",
+        "encoding": "utf8",
+        "x": 1070,
+        "y": 220,
+        "wires": [
+            [
+                "d9c23ee6b873bd24"
+            ]
+        ]
+    },
+    {
+        "id": "file_json",
+        "type": "file",
+        "z": "tab_claysense_gen",
+        "name": "Save Kiln JSON File",
+        "filename": "C:\\PERSONAL\\ISI\\clay-sense-ETL\\data\\kiln_telemetry.json",
+        "filenameType": "str",
+        "appendNewline": false,
+        "createDir": true,
+        "overwriteFile": "true",
+        "encoding": "utf8",
+        "x": 1080,
+        "y": 300,
+        "wires": [
+            [
+                "d9c23ee6b873bd24"
+            ]
+        ]
+    },
+    {
+        "id": "mqtt_out_telemetry",
+        "type": "mqtt out",
+        "z": "tab_claysense_gen",
+        "name": "MQTT: claysense/kiln/telemetry",
+        "topic": "claysense/kiln/telemetry",
+        "qos": "0",
+        "retain": "false",
+        "respTopic": "",
+        "contentType": "",
+        "userProps": "",
+        "correl": "",
+        "expiry": "",
+        "broker": "mqtt_broker_local",
+        "x": 1090,
+        "y": 380,
+        "wires": []
+    },
+    {
+        "id": "debug_status",
+        "type": "debug",
+        "z": "tab_claysense_gen",
+        "name": "Files Save Successfully",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 2810,
+        "y": 380,
+        "wires": []
+    },
+    {
+        "id": "f1a1cf4e14749fe2",
+        "type": "delay",
+        "z": "tab_claysense_gen",
+        "name": "",
+        "pauseType": "delay",
+        "timeout": "2",
+        "timeoutUnits": "seconds",
+        "rate": "1",
+        "nbRateUnits": "1",
+        "rateUnits": "second",
+        "randomFirst": "1",
+        "randomLast": "5",
+        "randomUnits": "seconds",
+        "drop": false,
+        "allowrate": false,
+        "outputs": 1,
+        "x": 2360,
+        "y": 380,
+        "wires": [
+            [
+                "8503a0912d1ef8e2"
+            ]
+        ]
+    },
+    {
+        "id": "8503a0912d1ef8e2",
+        "type": "exec",
+        "z": "tab_claysense_gen",
+        "command": "\"C:\\Program Files\\Kettlel\\data-integration\\Kitchen.bat\" /file:\"C:\\PERSONAL\\ISI\\clay-sense-ETL\\kettle\\jobs\\main_job.kjb\" /level:Basic",
+        "addpay": "",
+        "append": "",
+        "useSpawn": "false",
+        "timer": "",
+        "winHide": false,
+        "oldrc": false,
+        "name": "Trigger Job",
+        "x": 2570,
+        "y": 380,
+        "wires": [
+            [],
+            [
+                "debug_status"
+            ],
+            []
+        ]
+    },
+    {
+        "id": "db23b5c7cac547c5",
+        "type": "http request",
+        "z": "tab_claysense_gen",
+        "name": "",
+        "method": "use",
+        "ret": "obj",
+        "paytoqs": "ignore",
+        "url": "",
+        "tls": "",
+        "persist": false,
+        "proxy": "",
+        "insecureHTTPParser": false,
+        "authType": "",
+        "senderr": false,
+        "headers": [],
+        "x": 1730,
+        "y": 380,
+        "wires": [
+            [
+                "6327da4f668fd934"
+            ]
+        ]
+    },
+    {
+        "id": "f548e23d1346ea0f",
+        "type": "function",
+        "z": "tab_claysense_gen",
+        "name": "URL Preparation",
+        "func": "const now = new Date();\nconst year = now.getFullYear();\nconst month = String(now.getMonth() + 1).padStart(2, '0');\n\n// Endpoint de preços diários da REN com parâmetros obrigatórios\nmsg.url = `https://servicebus.ren.pt/datahubapi/gas/GasMarketPricesDaily?culture=pt-PT&year=${year}&month=${month}`;\nmsg.method = \"GET\";\n\nreturn msg;\n",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 1510,
+        "y": 260,
+        "wires": [
+            [
+                "db23b5c7cac547c5"
+            ]
+        ]
+    },
+    {
+        "id": "6327da4f668fd934",
+        "type": "function",
+        "z": "tab_claysense_gen",
+        "name": "XML File Structure",
+        "func": "let eurPerMwh = 35.00; // Valor padrão de contingência\n\n// 1. Extração do preço diário mais recente do JSON da REN\nif (Array.isArray(msg.payload) && msg.payload.length > 0) {\n    try {\n        // Encontra o último registo com valor numérico válido\n        for (let i = msg.payload.length - 1; i >= 0; i--) {\n            const entry = msg.payload[i];\n            const price = entry.price ?? entry.valor ?? entry.value ?? entry.Price;\n            if (price !== null && !isNaN(price)) {\n                eurPerMwh = parseFloat(price);\n                break;\n            }\n        }\n    } catch (err) {\n        node.warn(\"Erro ao ler JSON da REN, a utilizar valor padrão: \" + err.message);\n    }\n}\n\n// 2. Fórmulas de conversão física e regulada\n// 1 MWh = 1000 kWh\nconst eurPerKwh = eurPerMwh / 1000.0;\n\n// Poder Calorífico Superior (PCS padrão Gás Natural Portugal): 1 m³ ≈ 10.82 kWh\nconst pcsCalorific = 10.82;\n\n// Custo bruto do m³\nconst gasM3Price = parseFloat((eurPerKwh * pcsCalorific).toFixed(4));\n\n// Tarifas de Acesso às Redes (TAR) e Taxa de Carbono/ISP reguladas pela ERSE\nconst networkAccessTax = 0.055; // 5.5%\nconst carbonTaxPerM3 = 0.038;   // 0.038 €/m³\n\nconst today = new Date().toISOString().split('T')[0];\n\n// 3. Montar a estrutura do XML\nconst xmlContent = `<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<market_energy_cost>\n    <metadata>\n        <data_source>REN_DATAHUB_OFFICIAL</data_source>\n        <market_zone>MIBGAS_PT</market_zone>\n        <reference_date>${today}</reference_date>\n        <currency>EUR</currency>\n    </metadata>\n    <gas_tariffs>\n        <market_price_eur_mwh>${eurPerMwh.toFixed(2)}</market_price_eur_mwh>\n        <market_price_eur_kwh>${eurPerKwh.toFixed(4)}</market_price_eur_kwh>\n        <calorific_value_pcs>${pcsCalorific}</calorific_value_pcs>\n        <gas_m3_price>${gasM3Price}</gas_m3_price>\n        <network_access_tax_pct>${networkAccessTax}</network_access_tax_pct>\n        <carbon_tax_eur_m3>${carbonTaxPerM3}</carbon_tax_eur_m3>\n    </gas_tariffs>\n</market_energy_cost>`;\n\nreturn {\n    payload: xmlContent,\n    filename: \"C:\\\\PERSONAL\\\\ISI\\\\clay-sense-ETL\\\\data\\\\energy_tariffs.xml\"\n};\n",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 1930,
+        "y": 380,
+        "wires": [
+            [
+                "cd1134106ccd2cdc"
+            ]
+        ]
+    },
+    {
+        "id": "cd1134106ccd2cdc",
+        "type": "file",
+        "z": "tab_claysense_gen",
+        "name": "Write XML File",
+        "filename": "C:\\PERSONAL\\ISI\\clay-sense-ETL\\data\\energy_tariffs.xml",
+        "filenameType": "str",
+        "appendNewline": true,
+        "createDir": false,
+        "overwriteFile": "true",
+        "encoding": "none",
+        "x": 2140,
+        "y": 380,
+        "wires": [
+            [
+                "f1a1cf4e14749fe2"
+            ]
+        ]
+    },
+    {
+        "id": "eccca02acab4689a",
+        "type": "catch",
+        "z": "tab_claysense_gen",
+        "name": "Catch REN API Erros",
+        "scope": [
+            "db23b5c7cac547c5",
+            "6327da4f668fd934",
+            "cd1134106ccd2cdc"
+        ],
+        "uncaught": false,
+        "x": 1600,
+        "y": 540,
+        "wires": [
+            [
+                "3bbbfdc9fb2b689c"
+            ]
+        ]
+    },
+    {
+        "id": "3bbbfdc9fb2b689c",
+        "type": "function",
+        "z": "tab_claysense_gen",
+        "name": "Generate XML Fallback",
+        "func": "// Valores médios históricos/regulados para contingência\nconst fallbackMarketPriceMwh = 35.00;\nconst fallbackMarketPriceKwh = 0.0350;\nconst fallbackPcs = 10.82;\nconst fallbackM3Price = 0.3787;\nconst fallbackTaxPct = 0.055;\nconst fallbackCarbonTax = 0.038;\n\n// Montar estrutura XML idêntica à esperada pelo Pentaho\nconst xmlContent = `<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<market_specifications>\n  <specification>\n    <market_price_eur_mwh>${fallbackMarketPriceMwh.toFixed(2)}</market_price_eur_mwh>\n    <market_price_eur_kwh>${fallbackMarketPriceKwh.toFixed(4)}</market_price_eur_kwh>\n    <calorific_value_pcs>${fallbackPcs.toFixed(2)}</calorific_value_pcs>\n    <gas_m3_price>${fallbackM3Price.toFixed(4)}</gas_m3_price>\n    <network_access_tax_pct>${fallbackTaxPct.toFixed(3)}</network_access_tax_pct>\n    <carbon_tax_eur_m3>${fallbackCarbonTax.toFixed(3)}</carbon_tax_eur_m3>\n  </specification>\n</market_specifications>`;\n\nmsg.payload = xmlContent;\nnode.warn(\"Aviso: Falha na API da REN. A utilizar valores de contingência (Fallback XML).\");\n\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 1890,
+        "y": 540,
+        "wires": [
+            [
+                "cd1134106ccd2cdc"
+            ]
+        ]
+    },
+    {
+        "id": "d9c23ee6b873bd24",
+        "type": "join",
+        "z": "tab_claysense_gen",
+        "name": "",
+        "mode": "custom",
+        "build": "array",
+        "property": "payload",
+        "propertyType": "msg",
+        "key": "topic",
+        "joiner": "\\n",
+        "joinerType": "str",
+        "useparts": false,
+        "accumulate": false,
+        "timeout": "",
+        "count": "2",
+        "reduceRight": false,
+        "reduceExp": "",
+        "reduceInit": "",
+        "reduceInitType": "",
+        "reduceFixup": "",
+        "x": 1310,
+        "y": 260,
+        "wires": [
+            [
+                "f548e23d1346ea0f"
+            ]
+        ]
+    },
+    {
+        "id": "mqtt_broker_local",
+        "type": "mqtt-broker",
+        "name": "Mosquitto Local",
+        "broker": "localhost",
+        "port": "1883",
+        "clientid": "claysense_nodered",
+        "autoConnect": true,
+        "usetls": false,
+        "protocolVersion": "4",
+        "keepalive": "60",
+        "cleansession": true,
+        "autoUnsubscribe": true,
+        "birthTopic": "",
+        "birthQos": "0",
+        "birthPayload": "",
+        "birthMsg": {},
+        "closeTopic": "",
+        "closeQos": "0",
+        "closePayload": "",
+        "closeMsg": {},
+        "willTopic": "",
+        "willQos": "0",
+        "willPayload": "",
+        "willMsg": {},
+        "userProps": "",
+        "sessionExpiry": ""
+    }
+]

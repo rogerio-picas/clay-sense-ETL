@@ -1,0 +1,43 @@
+2026/10/20 22:27:16 - Report Export Transformation - Using run configuration [Pentaho local]
+2026/10/20 22:27:16 - kiln_costs_daily_report - Expedindo in?cio para transforma??o [kiln_costs_daily_report]
+2026/10/20 22:27:17 - Production Costs Report XLSX.0 - ERROR (version 9.5.0.1-253, build 0.0 from 2023-07-24 08.38.58 by Study) : Error opening new file
+2026/10/20 22:27:17 - Production Costs Report XLSX.0 - ERROR (version 9.5.0.1-253, build 0.0 from 2023-07-24 08.38.58 by Study) : org.apache.commons.vfs2.FileSystemException: Could not delete "file:///C:/PERSONAL/ISI/clay-sense-ETL/data/reports/production_costs_report20-10-2026.xlsx".
+2026/10/20 22:27:17 - Production Costs Report XLSX.0 - 	at org.apache.commons.vfs2.provider.AbstractFileObject.deleteSelf(AbstractFileObject.java:469)
+2026/10/20 22:27:17 - Production Costs Report XLSX.0 - 	at org.apache.commons.vfs2.provider.AbstractFileObject.delete(AbstractFileObject.java:425)
+2026/10/20 22:27:17 - Production Costs Report XLSX.0 - 	at org.apache.commons.vfs2.provider.AbstractFileObject.delete(AbstractFileObject.java:388)
+2026/10/20 22:27:17 - Production Costs Report XLSX.0 - 	at org.pentaho.di.trans.steps.excelwriter.ExcelWriterStep.prepareNextOutputFile(ExcelWriterStep.java:605)
+2026/10/20 22:27:17 - Production Costs Report XLSX.0 - 	at org.pentaho.di.trans.steps.excelwriter.ExcelWriterStep.processRow(ExcelWriterStep.java:129)
+2026/10/20 22:27:17 - Production Costs Report XLSX.0 - 	at org.pentaho.di.trans.step.RunThread.run(RunThread.java:63)
+2026/10/20 22:27:17 - Production Costs Report XLSX.0 - 	at java.base/java.lang.Thread.run(Thread.java:829)
+2026/10/20 22:27:17 - Production Costs Report XLSX.0 - Caused by: org.apache.commons.vfs2.FileSystemException: Could not delete "C:\PERSONAL\ISI\clay-sense-ETL\data\reports\production_costs_report20-10-2026.xlsx".
+2026/10/20 22:27:17 - Production Costs Report XLSX.0 - 	at org.apache.commons.vfs2.provider.local.LocalFile.doDelete(LocalFile.java:90)
+2026/10/20 22:27:17 - Production Costs Report XLSX.0 - 	at org.apache.commons.vfs2.provider.AbstractFileObject.deleteSelf(AbstractFileObject.java:462)
+2026/10/20 22:27:17 - Production Costs Report XLSX.0 - 	... 6 more
+2026/10/20 22:27:17 - Production Costs Report XLSX.0 - ERROR (version 9.5.0.1-253, build 0.0 from 2023-07-24 08.38.58 by Study) : Erro inesperado
+2026/10/20 22:27:17 - Production Costs Report XLSX.0 - ERROR (version 9.5.0.1-253, build 0.0 from 2023-07-24 08.38.58 by Study) : org.pentaho.di.core.exception.KettleException: 
+2026/10/20 22:27:17 - Production Costs Report XLSX.0 - org.apache.commons.vfs2.FileSystemException: Could not delete "file:///C:/PERSONAL/ISI/clay-sense-ETL/data/reports/production_costs_report20-10-2026.xlsx".
+2026/10/20 22:27:17 - Production Costs Report XLSX.0 - Could not delete "file:///C:/PERSONAL/ISI/clay-sense-ETL/data/reports/production_costs_report20-10-2026.xlsx".
+2026/10/20 22:27:17 - Production Costs Report XLSX.0 - 
+2026/10/20 22:27:17 - Production Costs Report XLSX.0 - 	at org.pentaho.di.trans.steps.excelwriter.ExcelWriterStep.prepareNextOutputFile(ExcelWriterStep.java:779)
+2026/10/20 22:27:17 - Production Costs Report XLSX.0 - 	at org.pentaho.di.trans.steps.excelwriter.ExcelWriterStep.processRow(ExcelWriterStep.java:129)
+2026/10/20 22:27:17 - Production Costs Report XLSX.0 - 	at org.pentaho.di.trans.step.RunThread.run(RunThread.java:63)
+2026/10/20 22:27:17 - Production Costs Report XLSX.0 - 	at java.base/java.lang.Thread.run(Thread.java:829)
+2026/10/20 22:27:17 - Production Costs Report XLSX.0 - Caused by: org.apache.commons.vfs2.FileSystemException: Could not delete "file:///C:/PERSONAL/ISI/clay-sense-ETL/data/reports/production_costs_report20-10-2026.xlsx".
+2026/10/20 22:27:17 - Production Costs Report XLSX.0 - 	at org.apache.commons.vfs2.provider.AbstractFileObject.deleteSelf(AbstractFileObject.java:469)
+2026/10/20 22:27:17 - Production Costs Report XLSX.0 - 	at org.apache.commons.vfs2.provider.AbstractFileObject.delete(AbstractFileObject.java:425)
+2026/10/20 22:27:17 - Production Costs Report XLSX.0 - 	at org.apache.commons.vfs2.provider.AbstractFileObject.delete(AbstractFileObject.java:388)
+2026/10/20 22:27:17 - Production Costs Report XLSX.0 - 	at org.pentaho.di.trans.steps.excelwriter.ExcelWriterStep.prepareNextOutputFile(ExcelWriterStep.java:605)
+2026/10/20 22:27:17 - Production Costs Report XLSX.0 - 	... 3 more
+2026/10/20 22:27:17 - Production Costs Report XLSX.0 - Caused by: org.apache.commons.vfs2.FileSystemException: Could not delete "C:\PERSONAL\ISI\clay-sense-ETL\data\reports\production_costs_report20-10-2026.xlsx".
+2026/10/20 22:27:17 - Production Costs Report XLSX.0 - 	at org.apache.commons.vfs2.provider.local.LocalFile.doDelete(LocalFile.java:90)
+2026/10/20 22:27:17 - Production Costs Report XLSX.0 - 	at org.apache.commons.vfs2.provider.AbstractFileObject.deleteSelf(AbstractFileObject.java:462)
+2026/10/20 22:27:17 - Production Costs Report XLSX.0 - 	... 6 more
+2026/10/20 22:27:17 - Production Costs Report XLSX.0 - Finished processing (I=0, O=0, R=1, W=0, U=0, E=1)
+2026/10/20 22:27:17 - Table input.0 - Finished reading query, closing connection
+2026/10/20 22:27:17 - kiln_costs_daily_report - ERROR (version 9.5.0.1-253, build 0.0 from 2023-07-24 08.38.58 by Study) : Erros detectados!
+2026/10/20 22:27:17 - kiln_costs_daily_report - Transforma??o detectada 
+2026/10/20 22:27:17 - Filter rows.0 - Finished processing (I=0, O=0, R=1, W=1, U=0, E=0)
+2026/10/20 22:27:17 - kiln_costs_daily_report - Transforma??o est? matando os outros steps!
+2026/10/20 22:27:17 - Table input.0 - Finished processing (I=47, O=0, R=0, W=90, U=0, E=0)
+2026/10/20 22:27:18 - Anomaly Report XLSX.0 - Finished processing (I=0, O=2, R=1, W=0, U=0, E=0)
+2026/10/20 22:27:18 - kiln_costs_daily_report - ERROR (version 9.5.0.1-253, build 0.0 from 2023-07-24 08.38.58 by Study) : Erros detectados!
